@@ -1,16 +1,18 @@
 {
-  "name": "justlisten-server",
+  "name": "radio-server",
   "version": "0.1.0",
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "node server.js",
-    "start": "node server.js"
+    "dev": "node index.js",
+    "start": "node index.js"
   },
   "dependencies": {
     "cors": "^2.8.5",
-    "express": "^4.19.2",
+    "express": "^4.18.2",
+    "socket.io": "^4.7.5",
     "nanoid": "^5.0.6",
-    "socket.io": "^4.8.1"
+    "ytdl-core": "^4.11.5",
+    "yt-dlp-exec": "^1.0.2"
   }
 }
