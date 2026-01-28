@@ -78,6 +78,12 @@ function App() {
     selectedIndexRef.current = selectedIndex;
   }, [role, roomId, hostId, queue, isPlaying, currentIndex, selectedIndex]);
 
+  const emitSafe = (event, payload) => {
+    const s = socketRef.current;
+    if (!s) return;
+    s.emit(event, payload);
+  };
+
   const ensureAudio = () => {
     if (!audioCtxRef.current) {
       const audioCtx = new AudioContext();
@@ -137,15 +143,13 @@ function App() {
   };
 
   const handleCreateRoom = () => {
-    if (!socket) return;
-    socket.emit("create-room");
+    emitSafe("create-room");
   };
 
   const handleJoinRoom = () => {
-    if (!socket) return;
     const id = joinInput.trim();
     if (!id) return;
-    socket.emit("join-room", { roomId: id });
+    emitSafe("join-room", { roomId: id });
   };
 
   const resolveAudiusUrl = async (url) => {
@@ -195,7 +199,7 @@ function App() {
       }
 
       const track = await fetchTrackInfo(trackId);
-      socket.emit("add-track", { roomId, url: trackId, title: track.title, artist: track.user?.name || "" });
+      emitSafe("add-track", { roomId, url: trackId, title: track.title, artist: track.user?.name || "" });
       setAudiusInput("");
       setSearchResults([]);
       if (roleRef.current === "host") {
@@ -244,8 +248,8 @@ function App() {
     currentIndexRef.current = index;
     setIsPlaying(true);
     playTrackUrl(list[index]);
-    if (socket && roomIdRef.current) {
-      socket.emit("host-status", { roomId: roomIdRef.current, status: { isPlaying: true } });
+    if (roomIdRef.current) {
+      emitSafe("host-status", { roomId: roomIdRef.current, status: { isPlaying: true } });
     }
   };
 
@@ -267,7 +271,7 @@ function App() {
       });
     }
     setIsPlaying(true);
-    socket.emit("host-status", { roomId, status: { isPlaying: true } });
+    emitSafe("host-status", { roomId, status: { isPlaying: true } });
     setStatus("Se reda.");
   };
 
@@ -281,7 +285,7 @@ function App() {
       audioElRef.current.pause();
     }
     setIsPlaying(false);
-    socket.emit("host-status", { roomId, status: { isPlaying: false } });
+    emitSafe("host-status", { roomId, status: { isPlaying: false } });
     setStatus("Pauza.");
   };
 
@@ -296,7 +300,7 @@ function App() {
     setCurrentIndex(-1);
     currentIndexRef.current = -1;
     setIsPlaying(false);
-    socket.emit("host-status", { roomId, status: { isPlaying: false } });
+    emitSafe("host-status", { roomId, status: { isPlaying: false } });
     if (USE_MOCK_AUDIO) {
       stopMockMusic();
     } else if (audioElRef.current) {
@@ -396,9 +400,8 @@ function App() {
       };
       pc.onicecandidate = (event) => {
         if (!event.candidate) return;
-        const s = socketRef.current;
-        if (!s || !roomIdRef.current) return;
-        s.emit("signal", {
+        if (!roomIdRef.current) return;
+        emitSafe("signal", {
           roomId: roomIdRef.current,
           targetId: from,
           data: { candidate: event.candidate }
@@ -410,7 +413,7 @@ function App() {
       await pc.setRemoteDescription(data);
       const answer = await pc.createAnswer();
       await pc.setLocalDescription(answer);
-      socket.emit("signal", {
+      emitSafe("signal", {
         roomId: roomIdRef.current,
         targetId: from,
         data: pc.localDescription
@@ -423,9 +426,9 @@ function App() {
   };
 
   useEffect(() => {
-    const s = io(SERVER_URL, { transports: ["websocket"] });
-    setSocket(s);
-    socketRef.current = s;
+      const s = io(SERVER_URL, { transports: ["websocket"] });
+      setSocket(s);
+      socketRef.current = s;
 
     s.on("connect", () => {
       setIsConnected(true);
@@ -504,9 +507,7 @@ function App() {
     const room = params.get("room");
     if (room) {
       setJoinInput(room);
-      if (socket) {
-        socket.emit("join-room", { roomId: room });
-      }
+      emitSafe("join-room", { roomId: room });
     }
   }, [socket]);
 
@@ -601,7 +602,7 @@ function App() {
                       <button
                         className="btn"
                         onClick={async () => {
-                          socket.emit("add-track", {
+                          emitSafe("add-track", {
                             roomId,
                             url: track.id,
                             title: track.title,
