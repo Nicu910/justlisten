@@ -34,6 +34,7 @@ function App() {
   const roleRef = useRef(role);
   const roomIdRef = useRef(roomId);
   const hostIdRef = useRef(hostId);
+  const socketRef = useRef(null);
   const queueRef = useRef(queue);
   const isPlayingRef = useRef(isPlaying);
   const currentIndexRef = useRef(currentIndex);
@@ -281,13 +282,14 @@ function App() {
     mixedStream.getTracks().forEach((track) => pc.addTrack(track, mixedStream));
 
     pc.onicecandidate = (event) => {
-      if (event.candidate) {
-        socket.emit("signal", {
-          roomId,
-          targetId: listenerId,
-          data: { candidate: event.candidate }
-        });
-      }
+      if (!event.candidate) return;
+      const s = socketRef.current;
+      if (!s) return;
+      s.emit("signal", {
+        roomId: roomIdRef.current,
+        targetId: listenerId,
+        data: { candidate: event.candidate }
+      });
     };
 
     pc.onconnectionstatechange = () => {
@@ -333,13 +335,14 @@ function App() {
         }
       };
       pc.onicecandidate = (event) => {
-        if (event.candidate && socket && roomIdRef.current) {
-          socket.emit("signal", {
-            roomId: roomIdRef.current,
-            targetId: from,
-            data: { candidate: event.candidate }
-          });
-        }
+        if (!event.candidate) return;
+        const s = socketRef.current;
+        if (!s || !roomIdRef.current) return;
+        s.emit("signal", {
+          roomId: roomIdRef.current,
+          targetId: from,
+          data: { candidate: event.candidate }
+        });
       };
     }
 
@@ -362,6 +365,7 @@ function App() {
   useEffect(() => {
     const s = io(SERVER_URL, { transports: ["websocket"] });
     setSocket(s);
+    socketRef.current = s;
 
     s.on("connect", () => {
       setIsConnected(true);
@@ -431,6 +435,7 @@ function App() {
 
     return () => {
       s.disconnect();
+      socketRef.current = null;
     };
   }, []);
 

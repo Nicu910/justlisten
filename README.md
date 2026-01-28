@@ -77,14 +77,10 @@ npm run start
 ## Note
 
 - Camerele sunt in memorie; repornirea serverului sterge camerele.
-- Proxy-ul YouTube foloseste `ytdl-core` cu fallback pe `yt-dlp` daca este instalat.
+- Proxy-ul YouTube foloseste `ytdl-core` cu fallback pe `yt-dlp-exec`.
 - Poti forta modul de test cu `VITE_MOCK_AUDIO=true` in client.
 - WebRTC foloseste un STUN public.
 
-## yt-dlp (optional)
+## yt-dlp-exec (fallback)
 
-Daca audio nu merge prin `ytdl-core`, instalarea `yt-dlp` rezolva de obicei:
-
-```powershell
-winget install yt-dlp
-```
+Fallback-ul `yt-dlp-exec` descarca automat binarul necesar la instalare (util pe Render).

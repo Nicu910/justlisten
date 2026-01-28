@@ -4,7 +4,7 @@ import { Server } from "socket.io";
 import cors from "cors";
 import { nanoid } from "nanoid";
 import ytdl from "ytdl-core";
-import { spawn } from "child_process";
+import ytdlp from "yt-dlp-exec";
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
@@ -49,60 +49,19 @@ app.get("/audio", async (req, res) => {
     console.error("Audio proxy error (ytdl):", error);
     try {
       res.setHeader("Content-Type", "audio/mpeg");
-      const ytDlpFromEnv = process.env.YTDLP_PATH;
-      const ytDlpFromWinGet = process.env.USERPROFILE
-        ? path.join(
-            process.env.USERPROFILE,
-            "AppData",
-            "Local",
-            "Microsoft",
-            "WinGet",
-            "Packages",
-            "yt-dlp.yt-dlp_Microsoft.Winget.Source_8wekyb3d8bbwe",
-            "yt-dlp.exe"
-          )
-        : null;
-      const denoFromWinGet = process.env.USERPROFILE
-        ? path.join(
-            process.env.USERPROFILE,
-            "AppData",
-            "Local",
-            "Microsoft",
-            "WinGet",
-            "Packages",
-            "DenoLand.Deno_Microsoft.Winget.Source_8wekyb3d8bbwe",
-            "deno.exe"
-          )
-        : null;
-      const ytDlpCandidates = [ytDlpFromEnv, ytDlpFromWinGet, "yt-dlp"].filter(Boolean);
-      const ytDlpPath = ytDlpCandidates.find((candidate) => {
-        if (candidate === "yt-dlp") return true;
-        return fs.existsSync(candidate);
-      });
-
-      const ytDlpArgs = [
-        "-f",
-        "bestaudio",
-        "-o",
-        "-",
-        "--no-playlist",
-        "--user-agent",
-        "Mozilla/5.0",
-        "--add-header",
-        "Accept-Language: en-US,en;q=0.9"
-      ];
-
-      if (denoFromWinGet && fs.existsSync(denoFromWinGet)) {
-        ytDlpArgs.push("--js-runtimes", `deno:${denoFromWinGet}`);
-      }
-
-      ytDlpArgs.push(url);
-
-      const proc = spawn(ytDlpPath, ytDlpArgs, {
-        stdio: ["ignore", "pipe", "pipe"]
-      });
+      const proc = ytdlp(
+        url,
+        {
+          output: "-",
+          format: "bestaudio",
+          noPlaylist: true,
+          userAgent: "Mozilla/5.0",
+          addHeader: ["Accept-Language: en-US,en;q=0.9"]
+        },
+        { stdio: ["ignore", "pipe", "pipe"] }
+      );
       proc.on("error", (spawnError) => {
-        console.error("yt-dlp spawn error:", spawnError);
+        console.error("yt-dlp-exec error:", spawnError);
         if (!res.headersSent) {
           res.status(500).send("Failed to load audio");
         }
