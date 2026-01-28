@@ -32,6 +32,7 @@ function App() {
   const [needsUserGesture, setNeedsUserGesture] = useState(false);
   const [musicVolume, setMusicVolume] = useState(80);
   const [voiceVolume, setVoiceVolume] = useState(70);
+  const [searchResults, setSearchResults] = useState([]);
 
   const roleRef = useRef(role);
   const roomIdRef = useRef(roomId);
@@ -598,7 +599,7 @@ function App() {
               <ol>
                 {searchResults.map((track) => (
                   <li key={track.id}>
-                    {track.title} — {track.user?.name || ""}
+                    {track.title} - {track.user?.name || ""}
                     <div className="button-row">
                       <button
                         className="btn"
@@ -753,7 +754,7 @@ function App() {
                     </option>
                     {queue.map((item, idx) => (
                       <option key={`${item.id || item}-${idx}`} value={idx}>
-                        {idx + 1}. {(item.title || item.id || item)}{item.artist ? ` — ${item.artist}` : ""}
+                        {idx + 1}. {(item.title || item.id || item)}{item.artist ? ` - ${item.artist}` : ""}
                       </option>
                     ))}
                   </select>
@@ -768,7 +769,7 @@ function App() {
                 <ol>
                   {queue.map((item, idx) => (
                     <li key={`${item.id || item}-${idx}`}>
-                      {idx === currentIndex ? "Se reda: " : ""}{(item.title || item.id || item)}{item.artist ? ` — ${item.artist}` : ""}
+                      {idx === currentIndex ? "Se reda: " : ""}{(item.title || item.id || item)}{item.artist ? ` - ${item.artist}` : ""}
                     </li>
                   ))}
                 </ol>
@@ -820,4 +821,3 @@ function App() {
 }
 
 export default App;
-  const [searchResults, setSearchResults] = useState([]);
