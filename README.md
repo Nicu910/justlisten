@@ -1,6 +1,6 @@
 # Just Listen (MVP)
 
-Aplicatie radio web accesibila, folosind numai tastatura, cu gazda care mixeaza muzica + microfon si transmite prin WebRTC.
+Aplicatie radio web accesibila, folosind numai tastatura, cu gazda care mixeaza muzica (Audius) + microfon si transmite prin WebRTC.
 
 ## Structura proiect
 
@@ -71,16 +71,18 @@ npm run start
 1) Apasa **Creeaza camera**
 2) Trimite linkul
 3) Ascultatorii deschid linkul si primesc streamul
-4) Gazda adauga un link YouTube
+4) Gazda adauga un link Audius sau cauta o piesa
 5) Gazda apasa **Porneste vorbirea** pentru voce peste muzica
 
 ## Note
 
 - Camerele sunt in memorie; repornirea serverului sterge camerele.
-- Proxy-ul YouTube foloseste `ytdl-core` cu fallback pe `yt-dlp-exec`.
+- Muzica este redata prin API-ul Audius (fara proxy YouTube).
 - Poti forta modul de test cu `VITE_MOCK_AUDIO=true` in client.
 - WebRTC foloseste un STUN public.
 
-## yt-dlp-exec (fallback)
+## Audius
 
-Fallback-ul `yt-dlp-exec` descarca automat binarul necesar la instalare (util pe Render).
+Poti folosi:
+- link direct Audius (ex: `https://audius.co/...`)
+- cautare dupa artist/titlu (rezultatele apar in UI)

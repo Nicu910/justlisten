@@ -4,6 +4,8 @@ import "./App.css";
 
 const SERVER_URL = import.meta.env.VITE_SERVER_URL || "http://localhost:4000";
 const USE_MOCK_AUDIO = import.meta.env.VITE_MOCK_AUDIO === "true";
+const AUDIUS_API = "https://api.audius.co/v1";
+const AUDIUS_APP_NAME = "JustListen";
 
 const createPeer = () => {
   return new RTCPeerConnection({
@@ -19,7 +21,7 @@ function App() {
   const [shareLink, setShareLink] = useState("");
   const [status, setStatus] = useState("Gata.");
   const [joinInput, setJoinInput] = useState("");
-  const [youtubeUrl, setYoutubeUrl] = useState("");
+  const [audiusInput, setAudiusInput] = useState("");
   const [queue, setQueue] = useState([]);
   const [isTalking, setIsTalking] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -145,24 +147,78 @@ function App() {
     socket.emit("join-room", { roomId: id });
   };
 
+  const resolveAudiusUrl = async (url) => {
+    const res = await fetch(`${AUDIUS_API}/resolve?url=${encodeURIComponent(url)}&app_name=${AUDIUS_APP_NAME}`, {
+      redirect: "follow"
+    });
+    const resolvedUrl = res.url || "";
+    const match = resolvedUrl.match(/\/tracks\/([^/?#]+)/);
+    if (!match) {
+      throw new Error("Nu am putut rezolva linkul Audius.");
+    }
+    return match[1];
+  };
+
+  const fetchTrackInfo = async (trackId) => {
+    const res = await fetch(`${AUDIUS_API}/tracks/${trackId}?app_name=${AUDIUS_APP_NAME}`);
+    if (!res.ok) throw new Error("Nu am putut lua detaliile piesei.");
+    const json = await res.json();
+    return json.data;
+  };
+
+  const searchAudius = async (query) => {
+    const res = await fetch(`${AUDIUS_API}/tracks/search?query=${encodeURIComponent(query)}&app_name=${AUDIUS_APP_NAME}&limit=5`);
+    if (!res.ok) throw new Error("Cautarea Audius a esuat.");
+    const json = await res.json();
+    return json.data || [];
+  };
+
   const handleAddTrack = async () => {
     if (!socket || !roomId) return;
-    const url = youtubeUrl.trim();
-    if (!url) return;
-    socket.emit("add-track", { roomId, url });
-    setYoutubeUrl("");
-    if (roleRef.current === "host") {
-      const next = [...queueRef.current, url];
-      queueRef.current = next;
-      setQueue(next);
-      if (currentIndexRef.current === -1) {
-        playIndex(0, next);
-        setStatus("Se reda prima piesa.");
+    const value = audiusInput.trim();
+    if (!value) return;
+
+    try {
+      let trackId = "";
+      if (value.includes("audius.co")) {
+        trackId = await resolveAudiusUrl(value);
+      } else {
+        const results = await searchAudius(value);
+        setSearchResults(results);
+        if (results.length === 0) {
+          setStatus("Nu am gasit rezultate Audius.");
+        } else {
+          setStatus("Alege o piesa din rezultate.");
+        }
+        return;
       }
+
+      const track = await fetchTrackInfo(trackId);
+      socket.emit("add-track", { roomId, url: trackId, title: track.title, artist: track.user?.name || "" });
+      setAudiusInput("");
+      setSearchResults([]);
+      if (roleRef.current === "host") {
+        const next = [...queueRef.current, { id: trackId, title: track.title, artist: track.user?.name || "" }];
+        queueRef.current = next;
+        setQueue(next);
+        if (currentIndexRef.current === -1) {
+          playIndex(0, next);
+          setStatus("Se reda prima piesa.");
+        }
+      }
+    } catch (error) {
+      setStatus("Eroare la adaugare piesa Audius.");
     }
   };
 
-  const playTrackUrl = (url) => {
+  const getAudiusStreamUrl = async (trackId) => {
+    const res = await fetch(`${AUDIUS_API}/tracks/${trackId}/stream?app_name=${AUDIUS_APP_NAME}&no_redirect=true`);
+    if (!res.ok) throw new Error("Nu pot obtine streamul Audius.");
+    const json = await res.json();
+    return json.data;
+  };
+
+  const playTrackUrl = async (track) => {
     ensureAudio();
     if (USE_MOCK_AUDIO) {
       startMockMusic();
@@ -171,11 +227,17 @@ function App() {
     if (!audioElRef.current) return;
     setStatus("Se incarca audio...");
     setNeedsUserGesture(false);
-    audioElRef.current.src = `${SERVER_URL}/audio?url=${encodeURIComponent(url)}`;
-    audioElRef.current.play().catch(() => {
-      setStatus("Apasa Reda pentru a porni audio.");
-      setNeedsUserGesture(true);
-    });
+    try {
+      const trackId = typeof track === "string" ? track : track.id;
+      const streamUrl = await getAudiusStreamUrl(trackId);
+      audioElRef.current.src = streamUrl;
+      audioElRef.current.play().catch(() => {
+        setStatus("Apasa Reda pentru a porni audio.");
+        setNeedsUserGesture(true);
+      });
+    } catch (error) {
+      setStatus("Audio Audius nu s-a incarcat.");
+    }
   };
 
   const playIndex = (index, list) => {
@@ -414,12 +476,12 @@ function App() {
       }
     });
 
-    s.on("track-added", ({ url, by }) => {
+    s.on("track-added", ({ url, by, title, artist }) => {
       setQueue((prev) => {
         if (roleRef.current === "host" && by === s.id) {
           return prev;
         }
-        return [...prev, url];
+        return [...prev, { id: url, title, artist }];
       });
     });
 
@@ -513,22 +575,62 @@ function App() {
           </div>
 
           <div className="field">
-            <label htmlFor="youtubeInput">Link YouTube</label>
+            <label htmlFor="audiusInput">Link Audius sau cautare</label>
             <input
-              id="youtubeInput"
+              id="audiusInput"
               type="text"
-              value={youtubeUrl}
-              onChange={(e) => setYoutubeUrl(e.target.value)}
-              placeholder="Lipeste link YouTube"
-              aria-label="Link YouTube"
+              value={audiusInput}
+              onChange={(e) => setAudiusInput(e.target.value)}
+              placeholder="Lipeste link Audius sau cauta"
+              aria-label="Link Audius sau cautare"
             />
           </div>
 
           <div className="button-row">
-            <button className="btn" onClick={handleAddTrack} aria-label="Adauga link YouTube">
-              Adauga link YouTube
+            <button className="btn" onClick={handleAddTrack} aria-label="Adauga piesa Audius">
+              Adauga piesa Audius
             </button>
           </div>
+
+          {searchResults.length > 0 && (
+            <div className="queue" aria-label="Rezultate cautare">
+              <h3>Rezultate Audius</h3>
+              <ol>
+                {searchResults.map((track) => (
+                  <li key={track.id}>
+                    {track.title} — {track.user?.name || ""}
+                    <div className="button-row">
+                      <button
+                        className="btn"
+                        onClick={async () => {
+                          socket.emit("add-track", {
+                            roomId,
+                            url: track.id,
+                            title: track.title,
+                            artist: track.user?.name || ""
+                          });
+                          if (roleRef.current === "host") {
+                            const next = [...queueRef.current, { id: track.id, title: track.title, artist: track.user?.name || "" }];
+                            queueRef.current = next;
+                            setQueue(next);
+                            if (currentIndexRef.current === -1) {
+                              playIndex(0, next);
+                              setStatus("Se reda prima piesa.");
+                            }
+                          }
+                          setSearchResults([]);
+                          setAudiusInput("");
+                        }}
+                        aria-label={`Adauga ${track.title}`}
+                      >
+                        Adauga
+                      </button>
+                    </div>
+                  </li>
+                ))}
+              </ol>
+            </div>
+          )}
 
           <div className="button-row">
             <button className="btn" onClick={handlePlay} aria-label="Reda">
@@ -650,8 +752,8 @@ function App() {
                       Alege o piesa
                     </option>
                     {queue.map((item, idx) => (
-                      <option key={`${item}-${idx}`} value={idx}>
-                        {idx + 1}. {item}
+                      <option key={`${item.id || item}-${idx}`} value={idx}>
+                        {idx + 1}. {(item.title || item.id || item)}{item.artist ? ` — ${item.artist}` : ""}
                       </option>
                     ))}
                   </select>
@@ -665,8 +767,8 @@ function App() {
 
                 <ol>
                   {queue.map((item, idx) => (
-                    <li key={`${item}-${idx}`}>
-                      {idx === currentIndex ? "Se reda: " : ""}{item}
+                    <li key={`${item.id || item}-${idx}`}>
+                      {idx === currentIndex ? "Se reda: " : ""}{(item.title || item.id || item)}{item.artist ? ` — ${item.artist}` : ""}
                     </li>
                   ))}
                 </ol>
@@ -711,10 +813,11 @@ function App() {
 
       <footer className="app__footer">
         <p>Compatibil tastatura. Prietenos cu cititorul de ecran.</p>
-        <p>Mod audio: {USE_MOCK_AUDIO ? "Ton fals" : "Proxy YouTube"}</p>
+        <p>Mod audio: {USE_MOCK_AUDIO ? "Ton fals" : "Audius"}</p>
       </footer>
     </main>
   );
 }
 
 export default App;
+  const [searchResults, setSearchResults] = useState([]);

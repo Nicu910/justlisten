@@ -129,10 +129,10 @@ io.on("connection", (socket) => {
     io.to(targetId).emit("signal", { from: socket.id, data, roomId });
   });
 
-  socket.on("add-track", ({ roomId, url }) => {
+  socket.on("add-track", ({ roomId, url, title, artist }) => {
     const room = rooms.get(roomId);
     if (!isHost(room, socket.id)) return;
-    io.to(roomId).emit("track-added", { url, addedAt: Date.now(), by: socket.id });
+    io.to(roomId).emit("track-added", { url, title, artist, addedAt: Date.now(), by: socket.id });
   });
 
   socket.on("host-status", ({ roomId, status }) => {
