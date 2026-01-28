@@ -35,6 +35,7 @@ function App() {
   const [searchResults, setSearchResults] = useState([]);
   const [hostConnState, setHostConnState] = useState("n/a");
   const [listenerConnState, setListenerConnState] = useState("n/a");
+  const [listenerCount, setListenerCount] = useState(0);
 
   const roleRef = useRef(role);
   const roomIdRef = useRef(roomId);
@@ -344,6 +345,7 @@ function App() {
   const createHostPeer = async (listenerId) => {
     await ensureAudio();
     const pc = createPeer();
+    setHostConnState("connecting");
     const mixedStream = mixDestRef.current.stream;
     mixedStream.getTracks().forEach((track) => pc.addTrack(track, mixedStream));
 
@@ -368,7 +370,7 @@ function App() {
     peerMapRef.current.set(listenerId, pc);
     const offer = await pc.createOffer();
     await pc.setLocalDescription(offer);
-    socket.emit("signal", {
+    emitSafe("signal", {
       roomId: roomIdRef.current,
       targetId: listenerId,
       data: pc.localDescription
@@ -417,6 +419,7 @@ function App() {
     }
 
     if (data?.type === "offer") {
+      setListenerConnState("connecting");
       await pc.setRemoteDescription(data);
       const answer = await pc.createAnswer();
       await pc.setLocalDescription(answer);
@@ -472,6 +475,7 @@ function App() {
 
     s.on("listener-joined", ({ listenerId }) => {
       if (roleRef.current === "host") {
+        setListenerCount((prev) => prev + 1);
         createHostPeer(listenerId);
       }
     });
@@ -501,6 +505,10 @@ function App() {
 
     s.on("host-left", () => {
       setStatus("Gazda a parasit camera.");
+    });
+
+    s.on("listener-left", () => {
+      setListenerCount((prev) => Math.max(0, prev - 1));
     });
 
     return () => {
@@ -719,6 +727,7 @@ function App() {
             <span>Vorbire: {isTalking ? "Da" : "Nu"}</span>
             <span>Redare: {isPlaying ? "Da" : "Nu"}</span>
             <span>WebRTC: {hostConnState}</span>
+            <span>Ascultatori: {listenerCount}</span>
           </div>
 
           {!USE_MOCK_AUDIO && (
