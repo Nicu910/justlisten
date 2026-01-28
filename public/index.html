@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="ro">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Just Listen</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="app">
+      <header class="app__header">
+        <h1>Just Listen</h1>
+        <p class="app__subtitle">Camere private pentru ascultare YouTube, sincronizat.</p>
+      </header>
+
+      <section class="panel" aria-label="Creeaza sau intra in camera">
+        <div class="button-row">
+          <button class="btn" id="createRoomBtn" aria-label="Creeaza camera">Creeaza camera</button>
+        </div>
+
+        <div class="field">
+          <label for="roomInput">Cod camera</label>
+          <input id="roomInput" type="text" placeholder="Introdu codul camerei" aria-label="Cod camera" />
+        </div>
+
+        <div class="button-row">
+          <button class="btn" id="joinRoomBtn" aria-label="Intra in camera">Intra in camera</button>
+        </div>
+
+        <p class="hint">Linkul generat este privat si poate fi trimis prietenilor.</p>
+      </section>
+    </main>
+
+    <script src="https://cdn.socket.io/4.8.1/socket.io.min.js" integrity="sha384-4Y/4u2yH8EPCYbZPxpTAV8aVTFX9cn4jG+VZit5DE6s1Hd8ENfXQG8QAmQZ1Qd3b" crossorigin="anonymous"></script>
+    <script src="app.js"></script>
+  </body>
+</html>

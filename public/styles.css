@@ -1,0 +1,126 @@
+:root {
+  --bg: #f4efe7;
+  --panel: #fffdf8;
+  --text: #1b1b1b;
+  --muted: #4a4a4a;
+  --accent: #0b5a7a;
+  --border: #d2b78c;
+  --focus: #000000;
+  --shadow: 0 14px 40px rgba(15, 28, 40, 0.14);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Lexend", "Segoe UI", sans-serif;
+  color: var(--text);
+  background: radial-gradient(circle at top left, #fff7ea 0%, #f1e5d1 40%, #e9d6b7 100%);
+  min-height: 100vh;
+}
+
+.app {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 3rem 1.5rem 3.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.75rem;
+}
+
+.app__header h1 {
+  margin: 0 0 0.6rem;
+  font-size: clamp(2.4rem, 5vw, 3.3rem);
+  letter-spacing: -0.02em;
+}
+
+.app__subtitle {
+  margin: 0;
+  color: var(--muted);
+}
+
+.panel {
+  padding: 1.75rem;
+  border: 2px solid rgba(11, 90, 122, 0.4);
+  background: rgba(255, 253, 248, 0.94);
+  border-radius: 20px;
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+input,
+button {
+  font-family: inherit;
+  font-size: 1.05rem;
+}
+
+input {
+  padding: 0.95rem 1.1rem;
+  border-radius: 12px;
+  border: 2px solid rgba(210, 183, 140, 0.8);
+}
+
+input[type="range"] {
+  padding: 0;
+}
+
+.button-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.btn {
+  padding: 1rem 1.7rem;
+  font-size: 1.1rem;
+  border-radius: 999px;
+  border: 2px solid rgba(11, 90, 122, 0.7);
+  background: linear-gradient(135deg, #ffffff 0%, #f6fbff 100%);
+  color: var(--text);
+  cursor: pointer;
+  min-width: 190px;
+  font-weight: 600;
+  box-shadow: 0 10px 26px rgba(12, 88, 120, 0.18);
+}
+
+.btn:active {
+  transform: translateY(2px);
+}
+
+.hint {
+  color: var(--muted);
+}
+
+.player {
+  width: 100%;
+  min-height: 360px;
+  background: #000;
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+:focus-visible {
+  outline: 4px solid var(--focus);
+  outline-offset: 4px;
+}
+
+@media (max-width: 640px) {
+  .app {
+    padding: 2rem 1rem 2.5rem;
+  }
+
+  .btn {
+    width: 100%;
+    min-width: auto;
+  }
+}

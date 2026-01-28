@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="ro">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Just Listen - Camera</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="app">
+      <header class="app__header">
+        <h1>Just Listen</h1>
+        <p class="app__subtitle">Camera privata. Gazda controleaza redarea.</p>
+      </header>
+
+      <section class="panel" aria-label="Status">
+        <p id="status" role="status">Se conecteaza...</p>
+        <p class="hint" id="roomLabel"></p>
+      </section>
+
+      <section class="panel" aria-label="Player">
+        <div id="player" class="player"></div>
+        <div class="button-row" id="tapToStartWrap">
+          <button class="btn" id="tapToStartBtn" aria-label="Porneste redarea">Porneste redarea</button>
+        </div>
+      </section>
+
+      <section class="panel" aria-label="Control gazda" id="hostControls">
+        <h2>Control gazda</h2>
+        <div class="field">
+          <label for="youtubeInput">Link YouTube</label>
+          <input id="youtubeInput" type="text" placeholder="Lipeste link YouTube" aria-label="Link YouTube" />
+        </div>
+        <div class="button-row">
+          <button class="btn" id="addBtn" aria-label="Adauga in lista">Adauga in lista</button>
+        </div>
+        <div class="button-row">
+          <button class="btn" id="playBtn" aria-label="Reda">Reda</button>
+          <button class="btn" id="pauseBtn" aria-label="Pauza">Pauza</button>
+          <button class="btn" id="skipBtn" aria-label="Sari">Sari</button>
+        </div>
+        <div class="field">
+          <label for="volumeRange">Volum local: <span id="volumeValue">50</span>%</label>
+          <input id="volumeRange" type="range" min="0" max="100" value="50" aria-label="Volum local" />
+        </div>
+      </section>
+
+      <section class="panel" aria-label="Ascultator" id="listenerControls">
+        <h2>Ascultator</h2>
+        <p class="hint">Doar gazda controleaza redarea.</p>
+      </section>
+
+      <section class="panel" aria-label="Lista">
+        <h2>Acum se reda</h2>
+        <p id="nowPlaying">Nimic</p>
+        <h3>Lista</h3>
+        <ol id="queueList"></ol>
+      </section>
+    </main>
+
+    <script src="https://www.youtube.com/iframe_api"></script>
+    <script src="https://cdn.socket.io/4.8.1/socket.io.min.js" integrity="sha384-4Y/4u2yH8EPCYbZPxpTAV8aVTFX9cn4jG+VZit5DE6s1Hd8ENfXQG8QAmQZ1Qd3b" crossorigin="anonymous"></script>
+    <script src="room.js"></script>
+  </body>
+</html>
