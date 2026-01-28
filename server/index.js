@@ -23,9 +23,7 @@ app.get("/health", (_req, res) => {
 const isAllowedAudioUrl = (rawUrl) => {
   try {
     const parsed = new URL(rawUrl);
-    if (parsed.protocol !== "https:") return false;
-    const host = parsed.hostname.toLowerCase();
-    return host.endsWith("audius.co") || host.endsWith("audiususercontent.com");
+    return parsed.protocol === "https:";
   } catch {
     return false;
   }
@@ -40,6 +38,7 @@ app.get("/audio", async (req, res) => {
   console.log("Audio request:", url);
   if (isAllowedAudioUrl(url)) {
     try {
+      console.log("Direct audio proxy:", url);
       const upstream = await fetch(url, {
         headers: {
           "User-Agent": "Mozilla/5.0"
