@@ -33,6 +33,8 @@ function App() {
   const [musicVolume, setMusicVolume] = useState(80);
   const [voiceVolume, setVoiceVolume] = useState(70);
   const [searchResults, setSearchResults] = useState([]);
+  const [hostConnState, setHostConnState] = useState("n/a");
+  const [listenerConnState, setListenerConnState] = useState("n/a");
 
   const roleRef = useRef(role);
   const roomIdRef = useRef(roomId);
@@ -357,6 +359,7 @@ function App() {
     };
 
     pc.onconnectionstatechange = () => {
+      setHostConnState(pc.connectionState || "unknown");
       if (pc.connectionState === "disconnected" || pc.connectionState === "closed") {
         peerMapRef.current.delete(listenerId);
       }
@@ -393,10 +396,14 @@ function App() {
           remoteAudioRef.current.srcObject = event.streams[0];
           remoteAudioRef.current.play().then(() => {
             setListenerReady(true);
+            setStatus("Se primeste audio.");
           }).catch(() => {
             setStatus("Apasa Incepe ascultarea pentru audio.");
           });
         }
+      };
+      pc.onconnectionstatechange = () => {
+        setListenerConnState(pc.connectionState || "unknown");
       };
       pc.onicecandidate = (event) => {
         if (!event.candidate) return;
@@ -711,6 +718,7 @@ function App() {
             <span>Conexiune: {isConnected ? "Online" : "Offline"}</span>
             <span>Vorbire: {isTalking ? "Da" : "Nu"}</span>
             <span>Redare: {isPlaying ? "Da" : "Nu"}</span>
+            <span>WebRTC: {hostConnState}</span>
           </div>
 
           {!USE_MOCK_AUDIO && (
@@ -782,6 +790,7 @@ function App() {
           <h2>Ascultare</h2>
           <p>Asculti transmisia gazdei.</p>
           <p>Gazda reda: {isPlaying ? "Da" : "Nu"}</p>
+          <p>WebRTC: {listenerConnState}</p>
           {!listenerReady && (
             <div className="button-row">
               <button
