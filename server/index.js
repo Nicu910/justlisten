@@ -39,6 +39,7 @@ app.get("/audio", async (req, res) => {
   if (isAllowedAudioUrl(url)) {
     try {
       console.log("Direct audio proxy:", url);
+      const range = req.headers.range;
       const upstream = await fetch(url, {
         redirect: "follow",
         headers: {
@@ -46,7 +47,8 @@ app.get("/audio", async (req, res) => {
           "Accept": "*/*",
           "Accept-Language": "en-US,en;q=0.9",
           "Referer": "https://audius.co/",
-          "Origin": "https://audius.co"
+          "Origin": "https://audius.co",
+          ...(range ? { Range: range } : {})
         }
       });
       if (!upstream.ok) {
@@ -59,6 +61,7 @@ app.get("/audio", async (req, res) => {
         res.status(502).send("Failed to fetch audio");
         return;
       }
+      res.status(upstream.status);
       res.setHeader("Access-Control-Allow-Origin", "*");
       const contentType = upstream.headers.get("content-type");
       if (contentType) {
@@ -67,6 +70,14 @@ app.get("/audio", async (req, res) => {
       const contentLength = upstream.headers.get("content-length");
       if (contentLength) {
         res.setHeader("Content-Length", contentLength);
+      }
+      const contentRange = upstream.headers.get("content-range");
+      if (contentRange) {
+        res.setHeader("Content-Range", contentRange);
+      }
+      const acceptRanges = upstream.headers.get("accept-ranges");
+      if (acceptRanges) {
+        res.setHeader("Accept-Ranges", acceptRanges);
       }
       Readable.fromWeb(upstream.body).pipe(res);
       return;

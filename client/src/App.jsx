@@ -212,11 +212,8 @@ function App() {
     }
   };
 
-  const getAudiusStreamUrl = async (trackId) => {
-    const res = await fetch(`${AUDIUS_API}/tracks/${trackId}/stream?app_name=${AUDIUS_APP_NAME}&no_redirect=true`);
-    if (!res.ok) throw new Error("Nu pot obtine streamul Audius.");
-    const json = await res.json();
-    return json.data;
+  const getAudiusStreamUrl = (trackId) => {
+    return `${AUDIUS_API}/tracks/${trackId}/stream?app_name=${AUDIUS_APP_NAME}`;
   };
 
   const playTrackUrl = async (track) => {
