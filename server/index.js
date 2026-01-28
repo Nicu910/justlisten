@@ -40,11 +40,22 @@ app.get("/audio", async (req, res) => {
     try {
       console.log("Direct audio proxy:", url);
       const upstream = await fetch(url, {
+        redirect: "follow",
         headers: {
-          "User-Agent": "Mozilla/5.0"
+          "User-Agent": "Mozilla/5.0",
+          "Accept": "*/*",
+          "Accept-Language": "en-US,en;q=0.9",
+          "Referer": "https://audius.co/",
+          "Origin": "https://audius.co"
         }
       });
       if (!upstream.ok) {
+        console.error("Audio upstream error:", upstream.status, upstream.statusText);
+        res.status(502).send("Failed to fetch audio");
+        return;
+      }
+      if (!upstream.body) {
+        console.error("Audio upstream error: empty body");
         res.status(502).send("Failed to fetch audio");
         return;
       }
@@ -52,6 +63,10 @@ app.get("/audio", async (req, res) => {
       const contentType = upstream.headers.get("content-type");
       if (contentType) {
         res.setHeader("Content-Type", contentType);
+      }
+      const contentLength = upstream.headers.get("content-length");
+      if (contentLength) {
+        res.setHeader("Content-Length", contentLength);
       }
       Readable.fromWeb(upstream.body).pipe(res);
       return;
