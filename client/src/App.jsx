@@ -231,7 +231,7 @@ function App() {
     try {
       const trackId = typeof track === "string" ? track : track.id;
       const streamUrl = await getAudiusStreamUrl(trackId);
-      audioElRef.current.src = streamUrl;
+      audioElRef.current.src = `${SERVER_URL}/audio?url=${encodeURIComponent(streamUrl)}`;
       audioElRef.current.play().catch(() => {
         setStatus("Apasa Reda pentru a porni audio.");
         setNeedsUserGesture(true);
@@ -722,7 +722,7 @@ function App() {
               aria-hidden="true"
               crossOrigin="anonymous"
               onError={() => {
-                setStatus("Audio nu s-a incarcat. Incearca alt link YouTube.");
+                setStatus("Audio nu s-a incarcat. Incearca alta piesa.");
               }}
               onCanPlay={() => {
                 setStatus("Audio gata.");

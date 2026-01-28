@@ -8,6 +8,7 @@ import ytdlp from "yt-dlp-exec";
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
+import { Readable } from "stream";
 
 const app = express();
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -19,6 +20,17 @@ app.get("/health", (_req, res) => {
   res.json({ ok: true });
 });
 
+const isAllowedAudioUrl = (rawUrl) => {
+  try {
+    const parsed = new URL(rawUrl);
+    if (parsed.protocol !== "https:") return false;
+    const host = parsed.hostname.toLowerCase();
+    return host.endsWith("audius.co") || host.endsWith("audiususercontent.com");
+  } catch {
+    return false;
+  }
+};
+
 app.get("/audio", async (req, res) => {
   const url = req.query.url;
   if (!url) {
@@ -26,6 +38,30 @@ app.get("/audio", async (req, res) => {
     return;
   }
   console.log("Audio request:", url);
+  if (isAllowedAudioUrl(url)) {
+    try {
+      const upstream = await fetch(url, {
+        headers: {
+          "User-Agent": "Mozilla/5.0"
+        }
+      });
+      if (!upstream.ok) {
+        res.status(502).send("Failed to fetch audio");
+        return;
+      }
+      res.setHeader("Access-Control-Allow-Origin", "*");
+      const contentType = upstream.headers.get("content-type");
+      if (contentType) {
+        res.setHeader("Content-Type", contentType);
+      }
+      Readable.fromWeb(upstream.body).pipe(res);
+      return;
+    } catch (error) {
+      console.error("Audio proxy error (direct):", error);
+      res.status(500).send("Failed to load audio");
+      return;
+    }
+  }
   if (!ytdl.validateURL(url)) {
     res.status(400).send("Invalid YouTube url");
     return;
