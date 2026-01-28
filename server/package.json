@@ -13,6 +13,6 @@
     "socket.io": "^4.7.5",
     "nanoid": "^5.0.6",
     "ytdl-core": "^4.11.5",
-    "yt-dlp-exec": "^1.0.4"
+    "yt-dlp-exec": "^1.0.2"
   }
 }
