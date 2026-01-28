@@ -1,0 +1,85 @@
+@@
+   const [isConnected, setIsConnected] = useState(false);
+   const [currentIndex, setCurrentIndex] = useState(-1);
++  const [selectedIndex, setSelectedIndex] = useState("");
+@@
+   const queueRef = useRef(queue);
+   const isPlayingRef = useRef(isPlaying);
+   const currentIndexRef = useRef(currentIndex);
++  const selectedIndexRef = useRef(selectedIndex);
+@@
+   useEffect(() => {
+@@
+     queueRef.current = queue;
+     isPlayingRef.current = isPlaying;
+     currentIndexRef.current = currentIndex;
+-  }, [role, roomId, hostId, queue, isPlaying, currentIndex]);
++    selectedIndexRef.current = selectedIndex;
++  }, [role, roomId, hostId, queue, isPlaying, currentIndex, selectedIndex]);
+@@
+   const handleSkip = async () => {
+@@
+   };
++
++  const handlePlaySelected = async () => {
++    if (!roomId || !socket) return;
++    const idx = Number(selectedIndexRef.current);
++    if (Number.isNaN(idx)) return;
++    if (idx < 0 || idx >= queueRef.current.length) return;
++    await playIndex(idx, queueRef.current);
++    setStatus("Playing selected track.");
++  };
+@@
+       {roomId && role === "host" && (
+         <section className="panel" aria-label="Host controls">
+@@
+           <div className="queue" aria-label="Queue">
+             <h3>Queue</h3>
+             {queue.length === 0 && <p>No tracks yet.</p>}
+             {queue.length > 0 && (
+-              <ol>
+-                {queue.map((item, idx) => (
+-                  <li key={`${item}-${idx}`}>
+-                    {idx === currentIndex ? "Now playing: " : ""}{item}
+-                  </li>
+-                ))}
+-              </ol>
++              <>
++                <div className="field">
++                  <label htmlFor="queueSelect">Select next track</label>
++                  <select
++                    id="queueSelect"
++                    value={selectedIndex}
++                    onChange={(e) => setSelectedIndex(e.target.value)}
++                    aria-label="Select next track"
++                  >
++                    <option value="" disabled>
++                      Choose a track
++                    </option>
++                    {queue.map((item, idx) => (
++                      <option key={`${item}-${idx}`} value={idx}>
++                        {idx + 1}. {item}
++                      </option>
++                    ))}
++                  </select>
++                </div>
++
++                <div className="button-row">
++                  <button className="btn" onClick={handlePlaySelected} aria-label="Play selected track">
++                    Play selected
++                  </button>
++                </div>
++
++                <ol>
++                  {queue.map((item, idx) => (
++                    <li key={`${item}-${idx}`}>
++                      {idx === currentIndex ? "Now playing: " : ""}{item}
++                    </li>
++                  ))}
++                </ol>
++              </>
+             )}
+           </div>
+         </section>
+       )}
+*** End Patch

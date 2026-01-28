@@ -1,0 +1,204 @@
+import express from "express";
+import http from "http";
+import { Server } from "socket.io";
+import cors from "cors";
+import { nanoid } from "nanoid";
+import ytdl from "ytdl-core";
+import { spawn } from "child_process";
+import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
+
+const app = express();
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const clientDist = path.join(__dirname, "..", "client", "dist");
+app.use(cors());
+app.use(express.json());
+
+app.get("/health", (_req, res) => {
+  res.json({ ok: true });
+});
+
+app.get("/audio", async (req, res) => {
+  const url = req.query.url;
+  if (!url) {
+    res.status(400).send("Missing url");
+    return;
+  }
+  console.log("Audio request:", url);
+  if (!ytdl.validateURL(url)) {
+    res.status(400).send("Invalid YouTube url");
+    return;
+  }
+
+  try {
+    const info = await ytdl.getInfo(url);
+    const format = ytdl.chooseFormat(info.formats, { quality: "highestaudio" });
+    res.setHeader("Content-Type", (format.mimeType || "audio/mpeg").split(";")[0]);
+    ytdl(url, {
+      quality: "highestaudio",
+      filter: "audioonly",
+      highWaterMark: 1 << 25,
+      requestOptions: {
+        headers: {
+          "User-Agent": "Mozilla/5.0"
+        }
+      }
+    }).pipe(res);
+  } catch (error) {
+    console.error("Audio proxy error (ytdl):", error);
+    try {
+      res.setHeader("Content-Type", "audio/mpeg");
+      const ytDlpFromEnv = process.env.YTDLP_PATH;
+      const ytDlpFromWinGet = process.env.USERPROFILE
+        ? path.join(
+            process.env.USERPROFILE,
+            "AppData",
+            "Local",
+            "Microsoft",
+            "WinGet",
+            "Packages",
+            "yt-dlp.yt-dlp_Microsoft.Winget.Source_8wekyb3d8bbwe",
+            "yt-dlp.exe"
+          )
+        : null;
+      const denoFromWinGet = process.env.USERPROFILE
+        ? path.join(
+            process.env.USERPROFILE,
+            "AppData",
+            "Local",
+            "Microsoft",
+            "WinGet",
+            "Packages",
+            "DenoLand.Deno_Microsoft.Winget.Source_8wekyb3d8bbwe",
+            "deno.exe"
+          )
+        : null;
+      const ytDlpCandidates = [ytDlpFromEnv, ytDlpFromWinGet, "yt-dlp"].filter(Boolean);
+      const ytDlpPath = ytDlpCandidates.find((candidate) => {
+        if (candidate === "yt-dlp") return true;
+        return fs.existsSync(candidate);
+      });
+
+      const ytDlpArgs = [
+        "-f",
+        "bestaudio",
+        "-o",
+        "-",
+        "--no-playlist",
+        "--user-agent",
+        "Mozilla/5.0",
+        "--add-header",
+        "Accept-Language: en-US,en;q=0.9"
+      ];
+
+      if (denoFromWinGet && fs.existsSync(denoFromWinGet)) {
+        ytDlpArgs.push("--js-runtimes", `deno:${denoFromWinGet}`);
+      }
+
+      ytDlpArgs.push(url);
+
+      const proc = spawn(ytDlpPath, ytDlpArgs, {
+        stdio: ["ignore", "pipe", "pipe"]
+      });
+      proc.on("error", (spawnError) => {
+        console.error("yt-dlp spawn error:", spawnError);
+        if (!res.headersSent) {
+          res.status(500).send("Failed to load audio");
+        }
+      });
+      proc.stderr.on("data", (chunk) => {
+        console.error("yt-dlp:", chunk.toString());
+      });
+      proc.stdout.pipe(res);
+    } catch (fallbackError) {
+      console.error("Audio proxy error (yt-dlp fallback):", fallbackError);
+      res.status(500).send("Failed to load audio");
+    }
+  }
+});
+
+if (fs.existsSync(clientDist)) {
+  app.use(express.static(clientDist));
+  app.get("*", (_req, res) => {
+    res.sendFile(path.join(clientDist, "index.html"));
+  });
+}
+
+const server = http.createServer(app);
+const io = new Server(server, {
+  cors: {
+    origin: "*",
+    methods: ["GET", "POST"]
+  }
+});
+
+const rooms = new Map();
+
+const isHost = (room, socketId) => room && room.hostId === socketId;
+
+io.on("connection", (socket) => {
+  socket.on("create-room", () => {
+    const roomId = nanoid(6);
+    rooms.set(roomId, {
+      hostId: socket.id,
+      listeners: new Set(),
+      createdAt: Date.now()
+    });
+    socket.join(roomId);
+    socket.emit("room-created", { roomId });
+  });
+
+  socket.on("join-room", ({ roomId }) => {
+    const room = rooms.get(roomId);
+    if (!room) {
+      socket.emit("room-error", { message: "Room not found" });
+      return;
+    }
+    if (room.hostId === socket.id) {
+      socket.emit("room-joined", { roomId, role: "host" });
+      return;
+    }
+    room.listeners.add(socket.id);
+    socket.join(roomId);
+    socket.emit("room-joined", { roomId, role: "listener", hostId: room.hostId });
+    io.to(room.hostId).emit("listener-joined", { listenerId: socket.id });
+  });
+
+  socket.on("signal", ({ roomId, targetId, data }) => {
+    if (!rooms.has(roomId)) return;
+    io.to(targetId).emit("signal", { from: socket.id, data, roomId });
+  });
+
+  socket.on("add-track", ({ roomId, url }) => {
+    const room = rooms.get(roomId);
+    if (!isHost(room, socket.id)) return;
+    io.to(roomId).emit("track-added", { url, addedAt: Date.now(), by: socket.id });
+  });
+
+  socket.on("host-status", ({ roomId, status }) => {
+    const room = rooms.get(roomId);
+    if (!isHost(room, socket.id)) return;
+    io.to(roomId).emit("host-status", status);
+  });
+
+  socket.on("disconnect", () => {
+    for (const [roomId, room] of rooms.entries()) {
+      if (room.hostId === socket.id) {
+        io.to(roomId).emit("host-left");
+        rooms.delete(roomId);
+        break;
+      }
+      if (room.listeners.has(socket.id)) {
+        room.listeners.delete(socket.id);
+        io.to(room.hostId).emit("listener-left", { listenerId: socket.id });
+        break;
+      }
+    }
+  });
+});
+
+const PORT = process.env.PORT || 4000;
+server.listen(PORT, () => {
+  console.log(`Server listening on http://localhost:${PORT}`);
+});

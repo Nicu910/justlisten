@@ -1,0 +1,278 @@
+
+> radio-server@0.1.0 dev
+> node index.js
+
+Server listening on http://localhost:4000
+Audio request: https://www.youtube.com/watch?v=P_c0Aojg0KY
+Audio proxy error (ytdl): Error: Could not extract functions
+    at D:\The D Drive\lucrari\aplicatie radio\server\node_modules\ytdl-core\lib\sig.js:20:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+yt-dlp: [youtube] Extracting URL: https://www.youtube.com/watch?v=P_c0Aojg0KY
+
+yt-dlp: [youtube] P_c0Aojg0KY: Downloading webpage
+
+yt-dlp: [youtube] P_c0Aojg0KY: Downloading tv client config
+
+yt-dlp: [youtube] P_c0Aojg0KY: Downloading player c9168c90-main
+
+yt-dlp: [youtube] P_c0Aojg0KY: Downloading tv player API JSON
+
+yt-dlp: [youtube] P_c0Aojg0KY: Downloading android sdkless player API JSON
+
+yt-dlp: WARNING: [youtube] P_c0Aojg0KY: Some web client https formats have been skipped as they are missing a url. YouTube is forcing SABR streaming for this client. See  https://github.com/yt-dlp/yt-dlp/issues/12482  for more details
+
+yt-dlp: [info] P_c0Aojg0KY: Downloading 1 format(s): 251
+
+yt-dlp: [download] Destination: -
+
+yt-dlp: [download]   0.0% of    3.48MiB at  943.18KiB/s ETA 00:03
+yt-dlp: [download]   0.1% of    3.48MiB at    2.76MiB/s ETA 00:01
+yt-dlp: [download]   0.2% of    3.48MiB at    3.33MiB/s ETA 00:01
+yt-dlp: [download]   0.4% of    3.48MiB at    7.15MiB/s ETA 00:00
+yt-dlp: [download]   0.9% of    3.48MiB at    8.74MiB/s ETA 00:00
+yt-dlp: [download]   1.8% of    3.48MiB at    8.44MiB/s ETA 00:00
+yt-dlp: [download]   3.6% of    3.48MiB at   10.25MiB/s ETA 00:00
+yt-dlp: [download]   7.2% of    3.48MiB at   15.41MiB/s ETA 00:00
+yt-dlp: [download]  14.3% of    3.48MiB at    8.16MiB/s ETA 00:00
+yt-dlp: [download]  28.7% of    3.48MiB at    2.87MiB/s ETA 00:00
+yt-dlp: [download]  57.4% of    3.48MiB at    2.39MiB/s ETA 00:00
+yt-dlp: [download] 100.0% of    3.48MiB at    2.18MiB/s ETA 00:00
+yt-dlp: [download] 100% of    3.48MiB in 00:00:01 at 2.02MiB/s   
+yt-dlp: 
+
+Audio request: https://www.youtube.com/watch?v=VWCBZpvjZfc&list=RDCLAK5uy_n9Fbdw7e6ap-98_A-8JYBmPv64v-Uaq1g&index=4
+Audio proxy error (ytdl): Error: Could not extract functions
+    at D:\The D Drive\lucrari\aplicatie radio\server\node_modules\ytdl-core\lib\sig.js:20:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+yt-dlp: [youtube:tab] Extracting URL: https://www.youtube.com/watch?v=VWCBZpvjZfc&list=RDCLAK5uy_n9Fbdw7e6ap-98_A-8JYBmPv64v-Uaq1g&index=4
+
+yt-dlp: [youtube:tab] Downloading just the video VWCBZpvjZfc because of --no-playlist
+
+yt-dlp: [youtube] Extracting URL: https://www.youtube.com/watch?v=VWCBZpvjZfc
+
+yt-dlp: [youtube] VWCBZpvjZfc: Downloading webpage
+
+yt-dlp: [youtube] VWCBZpvjZfc: Downloading tv client config
+
+yt-dlp: [youtube] VWCBZpvjZfc: Downloading player c9168c90-main
+
+yt-dlp: [youtube] VWCBZpvjZfc: Downloading tv player API JSON
+
+yt-dlp: [youtube] VWCBZpvjZfc: Downloading android sdkless player API JSON
+
+yt-dlp: WARNING: [youtube] VWCBZpvjZfc: Some web client https formats have been skipped as they are missing a url. YouTube is forcing SABR streaming for this client. See  https://github.com/yt-dlp/yt-dlp/issues/12482  for more details
+
+yt-dlp: [info] VWCBZpvjZfc: Downloading 1 format(s): 251
+
+yt-dlp: [download] Destination: -
+
+yt-dlp: [download]   0.1% of    1.94MiB at  314.18KiB/s ETA 00:06
+yt-dlp: [download]   0.2% of    1.94MiB at  624.99KiB/s ETA 00:03
+yt-dlp: [download]   0.4% of    1.94MiB at    1.42MiB/s ETA 00:01
+yt-dlp: [download]   0.8% of    1.94MiB at    2.52MiB/s ETA 00:00
+yt-dlp: [download]   1.6% of    1.94MiB at    4.42MiB/s ETA 00:00
+yt-dlp: [download]   3.2% of    1.94MiB at    7.83MiB/s ETA 00:00
+yt-dlp: [download]   6.4% of    1.94MiB at    6.01MiB/s ETA 00:00
+yt-dlp: [download]  12.8% of    1.94MiB at    8.77MiB/s ETA 00:00
+yt-dlp: [download]  25.7% of    1.94MiB at   10.87MiB/s ETA 00:00
+yt-dlp: [download]  51.5% of    1.94MiB at   13.70MiB/s ETA 00:00
+yt-dlp: [download] 100.0% of    1.94MiB at   16.44MiB/s ETA 00:00
+yt-dlp: [download] 100% of    1.94MiB in 00:00:01 at 1.37MiB/s   
+yt-dlp: 
+
+Audio request: https://www.youtube.com/watch?v=97Mj6pXYMd8&list=RDCLAK5uy_lq5FKkEnY_NHMBn8kVkkgHd0CCPoU-vgw&index=2
+Audio proxy error (ytdl): Error: Could not extract functions
+    at D:\The D Drive\lucrari\aplicatie radio\server\node_modules\ytdl-core\lib\sig.js:20:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+Audio request: https://www.youtube.com/watch?v=97Mj6pXYMd8&list=RDCLAK5uy_lq5FKkEnY_NHMBn8kVkkgHd0CCPoU-vgw&index=2
+yt-dlp: [youtube:tab] Extracting URL: https://www.youtube.com/watch?v=97Mj6pXYMd8&list=RDCLAK5uy_lq5FKkEnY_NHMBn8kVkkgHd0CCPoU-vgw&index=2
+
+yt-dlp: [youtube:tab] Downloading just the video 97Mj6pXYMd8 because of --no-playlist
+
+yt-dlp: [youtube] Extracting URL: https://www.youtube.com/watch?v=97Mj6pXYMd8
+
+yt-dlp: [youtube] 97Mj6pXYMd8: Downloading webpage
+
+Audio proxy error (ytdl): Error: Could not extract functions
+    at D:\The D Drive\lucrari\aplicatie radio\server\node_modules\ytdl-core\lib\sig.js:20:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+yt-dlp: [youtube] 97Mj6pXYMd8: Downloading tv client config
+
+yt-dlp: [youtube] 97Mj6pXYMd8: Downloading player c9168c90-main
+
+yt-dlp: [youtube] 97Mj6pXYMd8: Downloading tv player API JSON
+
+yt-dlp: [youtube] 97Mj6pXYMd8: Downloading android sdkless player API JSON
+
+yt-dlp: WARNING: [youtube] 97Mj6pXYMd8: Some web client https formats have been skipped as they are missing a url. YouTube is forcing SABR streaming for this client. See  https://github.com/yt-dlp/yt-dlp/issues/12482  for more details
+
+yt-dlp: [info] 97Mj6pXYMd8: Downloading 1 format(s): 251
+
+yt-dlp: [download] Destination: -
+
+yt-dlp: [download]   0.0% of    2.78MiB at  Unknown B/s ETA Unknown
+yt-dlp: [download]   0.1% of    2.78MiB at  Unknown B/s ETA Unknown
+yt-dlp: [download]   0.2% of    2.78MiB at  Unknown B/s ETA Unknown
+yt-dlp: [download]   0.5% of    2.78MiB at    9.52MiB/s ETA 00:00  
+yt-dlp: [download]   1.1% of    2.78MiB at    3.92MiB/s ETA 00:00
+yt-dlp: [download]   2.2% of    2.78MiB at    3.06MiB/s ETA 00:00
+yt-dlp: [youtube:tab] Extracting URL: https://www.youtube.com/watch?v=97Mj6pXYMd8&list=RDCLAK5uy_lq5FKkEnY_NHMBn8kVkkgHd0CCPoU-vgw&index=2
+
+yt-dlp: [youtube:tab] Downloading just the video 97Mj6pXYMd8 because of --no-playlist
+
+yt-dlp: [youtube] Extracting URL: https://www.youtube.com/watch?v=97Mj6pXYMd8
+
+yt-dlp: [youtube] 97Mj6pXYMd8: Downloading webpage
+
+yt-dlp: [youtube] 97Mj6pXYMd8: Downloading tv client config
+
+yt-dlp: [youtube] 97Mj6pXYMd8: Downloading player c9168c90-main
+
+yt-dlp: [youtube] 97Mj6pXYMd8: Downloading tv player API JSON
+
+yt-dlp: [youtube] 97Mj6pXYMd8: Downloading android sdkless player API JSON
+
+yt-dlp: WARNING: [youtube] 97Mj6pXYMd8: Some web client https formats have been skipped as they are missing a url. YouTube is forcing SABR streaming for this client. See  https://github.com/yt-dlp/yt-dlp/issues/12482  for more details
+
+yt-dlp: [info] 97Mj6pXYMd8: Downloading 1 format(s): 251
+
+yt-dlp: [download] Destination: -
+
+yt-dlp: [download]   0.0% of    2.78MiB at  957.17KiB/s ETA 00:02
+yt-dlp: [download]   0.1% of    2.78MiB at    2.80MiB/s ETA 00:00
+yt-dlp: [download]   0.2% of    2.78MiB at    3.34MiB/s ETA 00:00
+yt-dlp: [download]   0.5% of    2.78MiB at    7.16MiB/s ETA 00:00
+yt-dlp: [download]   1.1% of    2.78MiB at    6.71MiB/s ETA 00:00
+yt-dlp: [download]   2.2% of    2.78MiB at   10.76MiB/s ETA 00:00
+yt-dlp: [download]   4.5% of    2.78MiB at   13.19MiB/s ETA 00:00
+yt-dlp: [download]   9.0% of    2.78MiB at   17.68MiB/s ETA 00:00
+yt-dlp: [download]  18.0% of    2.78MiB at   19.39MiB/s ETA 00:00
+yt-dlp: [download]  36.0% of    2.78MiB at   27.68MiB/s ETA 00:00
+yt-dlp: [download]  72.0% of    2.78MiB at   33.53MiB/s ETA 00:00
+yt-dlp: [download] 100.0% of    2.78MiB at   38.24MiB/s ETA 00:00
+yt-dlp: [download] 100% of    2.78MiB in 00:00:00 at 24.52MiB/s  
+yt-dlp: 
+
+Audio request: https://www.youtube.com/watch?v=97Mj6pXYMd8&list=RDCLAK5uy_lq5FKkEnY_NHMBn8kVkkgHd0CCPoU-vgw&index=2
+Audio proxy error (ytdl): Error: Could not extract functions
+    at D:\The D Drive\lucrari\aplicatie radio\server\node_modules\ytdl-core\lib\sig.js:20:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+yt-dlp: [youtube:tab] Extracting URL: https://www.youtube.com/watch?v=97Mj6pXYMd8&list=RDCLAK5uy_lq5FKkEnY_NHMBn8kVkkgHd0CCPoU-vgw&index=2
+
+yt-dlp: [youtube:tab] Downloading just the video 97Mj6pXYMd8 because of --no-playlist
+
+yt-dlp: [youtube] Extracting URL: https://www.youtube.com/watch?v=97Mj6pXYMd8
+
+yt-dlp: [youtube] 97Mj6pXYMd8: Downloading webpage
+
+yt-dlp: [youtube] 97Mj6pXYMd8: Downloading tv client config
+
+yt-dlp: [youtube] 97Mj6pXYMd8: Downloading player c9168c90-main
+
+yt-dlp: [youtube] 97Mj6pXYMd8: Downloading tv player API JSON
+
+yt-dlp: [youtube] 97Mj6pXYMd8: Downloading android sdkless player API JSON
+
+yt-dlp: WARNING: [youtube] 97Mj6pXYMd8: Some web client https formats have been skipped as they are missing a url. YouTube is forcing SABR streaming for this client. See  https://github.com/yt-dlp/yt-dlp/issues/12482  for more details
+
+yt-dlp: [info] 97Mj6pXYMd8: Downloading 1 format(s): 251
+
+yt-dlp: [download] Destination: -
+
+yt-dlp: [download]   0.0% of    2.78MiB at  Unknown B/s ETA Unknown
+yt-dlp: [download]   0.1% of    2.78MiB at    1.25MiB/s ETA 00:02  
+yt-dlp: [download]   0.2% of    2.78MiB at    2.33MiB/s ETA 00:01
+yt-dlp: [download]   0.5% of    2.78MiB at    4.24MiB/s ETA 00:00
+yt-dlp: [download]   1.1% of    2.78MiB at    8.77MiB/s ETA 00:00
+yt-dlp: [download]   2.2% of    2.78MiB at   13.48MiB/s ETA 00:00
+yt-dlp: [download]   4.5% of    2.78MiB at   15.91MiB/s ETA 00:00
+yt-dlp: [download]   9.0% of    2.78MiB at   20.23MiB/s ETA 00:00
+yt-dlp: [download]  18.0% of    2.78MiB at   25.74MiB/s ETA 00:00
+yt-dlp: [download]  36.0% of    2.78MiB at   31.59MiB/s ETA 00:00
+yt-dlp: [download]  72.0% of    2.78MiB at   37.17MiB/s ETA 00:00
+yt-dlp: [download] 100.0% of    2.78MiB at   39.01MiB/s ETA 00:00
+yt-dlp: [download] 100% of    2.78MiB in 00:00:00 at 18.25MiB/s  
+yt-dlp: 
+
+Audio request: https://www.youtube.com/watch?v=97Mj6pXYMd8&list=RDCLAK5uy_lq5FKkEnY_NHMBn8kVkkgHd0CCPoU-vgw&index=3
+Audio proxy error (ytdl): Error: Could not extract functions
+    at D:\The D Drive\lucrari\aplicatie radio\server\node_modules\ytdl-core\lib\sig.js:20:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+yt-dlp: [youtube:tab] Extracting URL: https://www.youtube.com/watch?v=97Mj6pXYMd8&list=RDCLAK5uy_lq5FKkEnY_NHMBn8kVkkgHd0CCPoU-vgw&index=3
+
+yt-dlp: [youtube:tab] Downloading just the video 97Mj6pXYMd8 because of --no-playlist
+
+yt-dlp: [youtube] Extracting URL: https://www.youtube.com/watch?v=97Mj6pXYMd8
+
+yt-dlp: [youtube] 97Mj6pXYMd8: Downloading webpage
+
+yt-dlp: [youtube] 97Mj6pXYMd8: Downloading tv client config
+
+yt-dlp: [youtube] 97Mj6pXYMd8: Downloading player c9168c90-main
+
+yt-dlp: [youtube] 97Mj6pXYMd8: Downloading tv player API JSON
+
+yt-dlp: [youtube] 97Mj6pXYMd8: Downloading android sdkless player API JSON
+
+yt-dlp: WARNING: [youtube] 97Mj6pXYMd8: Some web client https formats have been skipped as they are missing a url. YouTube is forcing SABR streaming for this client. See  https://github.com/yt-dlp/yt-dlp/issues/12482  for more details
+
+yt-dlp: [info] 97Mj6pXYMd8: Downloading 1 format(s): 251
+
+yt-dlp: [download] Destination: -
+
+yt-dlp: [download]   0.0% of    2.78MiB at  960.23KiB/s ETA 00:02
+yt-dlp: [download]   0.1% of    2.78MiB at    2.81MiB/s ETA 00:00
+yt-dlp: [download]   0.2% of    2.78MiB at    6.56MiB/s ETA 00:00
+yt-dlp: [download]   0.5% of    2.78MiB at    6.23MiB/s ETA 00:00
+yt-dlp: [download]   1.1% of    2.78MiB at    7.73MiB/s ETA 00:00
+yt-dlp: [download]   2.2% of    2.78MiB at    8.25MiB/s ETA 00:00
+yt-dlp: [download]   4.5% of    2.78MiB at   10.83MiB/s ETA 00:00
+yt-dlp: [download]   9.0% of    2.78MiB at   15.57MiB/s ETA 00:00
+yt-dlp: [download]  18.0% of    2.78MiB at   23.79MiB/s ETA 00:00
+yt-dlp: [download]  36.0% of    2.78MiB at   26.44MiB/s ETA 00:00
+yt-dlp: [download]  72.0% of    2.78MiB at   30.51MiB/s ETA 00:00
+yt-dlp: [download] 100.0% of    2.78MiB at   34.46MiB/s ETA 00:00
+yt-dlp: [download] 100% of    2.78MiB in 00:00:00 at 17.06MiB/s  
+yt-dlp: 
+
+Audio request: https://www.youtube.com/watch?v=97Mj6pXYMd8&list=RDCLAK5uy_lq5FKkEnY_NHMBn8kVkkgHd0CCPoU-vgw&index=3
+Audio proxy error (ytdl): Error: Could not extract functions
+    at D:\The D Drive\lucrari\aplicatie radio\server\node_modules\ytdl-core\lib\sig.js:20:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+yt-dlp: [youtube:tab] Extracting URL: https://www.youtube.com/watch?v=97Mj6pXYMd8&list=RDCLAK5uy_lq5FKkEnY_NHMBn8kVkkgHd0CCPoU-vgw&index=3
+
+yt-dlp: [youtube:tab] Downloading just the video 97Mj6pXYMd8 because of --no-playlist
+
+yt-dlp: [youtube] Extracting URL: https://www.youtube.com/watch?v=97Mj6pXYMd8
+
+yt-dlp: [youtube] 97Mj6pXYMd8: Downloading webpage
+
+yt-dlp: [youtube] 97Mj6pXYMd8: Downloading tv client config
+
+yt-dlp: [youtube] 97Mj6pXYMd8: Downloading player c9168c90-main
+
+yt-dlp: [youtube] 97Mj6pXYMd8: Downloading tv player API JSON
+
+yt-dlp: [youtube] 97Mj6pXYMd8: Downloading android sdkless player API JSON
+
+yt-dlp: WARNING: [youtube] 97Mj6pXYMd8: Some web client https formats have been skipped as they are missing a url. YouTube is forcing SABR streaming for this client. See  https://github.com/yt-dlp/yt-dlp/issues/12482  for more details
+
+yt-dlp: [info] 97Mj6pXYMd8: Downloading 1 format(s): 251
+
+yt-dlp: [download] Destination: -
+
+yt-dlp: [download]   0.0% of    2.78MiB at  Unknown B/s ETA Unknown
+yt-dlp: [download]   0.1% of    2.78MiB at    1.90MiB/s ETA 00:01  
+yt-dlp: [download]   0.2% of    2.78MiB at    4.44MiB/s ETA 00:00
+yt-dlp: [download]   0.5% of    2.78MiB at    5.49MiB/s ETA 00:00
+yt-dlp: [download]   1.1% of    2.78MiB at    8.07MiB/s ETA 00:00
+yt-dlp: [download]   2.2% of    2.78MiB at   10.55MiB/s ETA 00:00
+yt-dlp: [download]   4.5% of    2.78MiB at   10.87MiB/s ETA 00:00
+yt-dlp: [download]   9.0% of    2.78MiB at   14.69MiB/s ETA 00:00
+yt-dlp: [download]  18.0% of    2.78MiB at   21.59MiB/s ETA 00:00
+yt-dlp: [download]  36.0% of    2.78MiB at   22.91MiB/s ETA 00:00
+yt-dlp: [download]  72.0% of    2.78MiB at   23.83MiB/s ETA 00:00
+yt-dlp: [download] 100.0% of    2.78MiB at   28.26MiB/s ETA 00:00
+yt-dlp: [download] 100% of    2.78MiB in 00:00:00 at 21.96MiB/s  
+yt-dlp: 
+

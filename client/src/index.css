@@ -1,0 +1,55 @@
+:root {
+  --bg: #f4efe7;
+  --panel: #fffdf8;
+  --text: #1b1b1b;
+  --muted: #494949;
+  --accent: #0b5a7a;
+  --accent-strong: #0f7fb0;
+  --border: #d2b78c;
+  --focus: #000000;
+  --shadow: 0 14px 40px rgba(15, 28, 40, 0.14);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Lexend", "Atkinson Hyperlegible", "Segoe UI", "Trebuchet MS", sans-serif;
+  color: var(--text);
+  background: radial-gradient(circle at top left, #fff7ea 0%, #f1e5d1 40%, #e9d6b7 100%);
+  min-height: 100vh;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+button,
+input {
+  font-family: inherit;
+  font-size: 1.05rem;
+}
+
+:focus-visible {
+  outline: 4px solid var(--focus);
+  outline-offset: 4px;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(circle at 20% 20%, rgba(15, 127, 176, 0.08), transparent 40%),
+    radial-gradient(circle at 80% 10%, rgba(200, 140, 72, 0.14), transparent 35%),
+    radial-gradient(circle at 70% 80%, rgba(13, 90, 122, 0.08), transparent 45%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+#root {
+  position: relative;
+  z-index: 1;
+}
